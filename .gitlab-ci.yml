@@ -1,0 +1,30 @@
+stages:
+    - build
+
+variables:
+    MYGET_ACCESS_TOKEN: <AddMyGetAccessToken>
+
+build_ci:
+    stage: build
+    variables:
+        PACKAGE_SUFFIX: CI-$CI_PIPELINE_ID
+        MYGET_FEED_URL: https://www.myget.org/F/commonlax-ci/api/v2/package
+        SYMBOL_FEED_URL: https://www.myget.org/F/commonlax-ci/symbols/api/v2/package
+    tags:
+        - windows
+    script:
+        - "./Build-CI.ps1"
+    except:
+        - master
+
+build_prod:
+    stage: build
+    variables:
+        MYGET_FEED_URL: https://www.myget.org/F/commonlax/api/v2/package
+        SYMBOL_FEED_URL: https://www.myget.org/F/commonlax/symbols/api/v2/package
+    tags:
+        - windows
+    script:
+        - "./Build-Master.ps1"
+    only:
+        - master
